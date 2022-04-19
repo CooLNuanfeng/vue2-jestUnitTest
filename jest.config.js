@@ -1,5 +1,7 @@
 module.exports = {
   preset: '@vue/cli-plugin-unit-jest',
+  "resetMocks": false,
+  "setupFiles": ["jest-localstorage-mock"],
   'collectCoverage': false,
   // 测试报告想要覆盖那些文件，目录，前面加！是避开这些文件，根据个人项目自己配置
   'collectCoverageFrom': [

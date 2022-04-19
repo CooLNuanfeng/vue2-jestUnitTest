@@ -32,7 +32,7 @@ config.mocks = {
     getters: {
       getLoginStatus: () => true
     }
-  }
+  },
 }
 
 
@@ -62,10 +62,13 @@ describe('HelloWorld.vue', () => {
   it('add btn', async()=>{
     const wrapper = shallowMount(HelloWorld)
     wrapper.find('button').trigger('click')
-
     await flushPromises()
+    
     expect(wrapper.vm.cartNum).toBe(1)
     expect(wrapper.find('p').text()).toBe('1')
+    const spy = jest.spyOn(localStorage, 'setItem')
+    console.log('spy==>',spy)
+    expect(spy).toHaveBeenCalledWith('cartNum',1)
     expect(wrapper.emitted().add).toBeTruthy()
     expect(wrapper.emitted().add.length).toBe(1)
     expect(wrapper.emitted().add[0]).toEqual([1])

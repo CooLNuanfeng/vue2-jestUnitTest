@@ -36,13 +36,14 @@ export default {
       this.storeList = result.data
     },
     addFn(){
-      console.log(this.getLoginStatus)
+      // console.log(this.getLoginStatus)
       if(!this.$store.getters.getLoginStatus()){
         this.$router.push('/login')
       }else{
         this.$http.post('/api/add').then(res => {
           if(res.success){
             this.cartNum += 1
+            localStorage.setItem('cartNum', this.cartNum)
             this.$emit('add',this.cartNum)
           }else{
             console.log('error')
