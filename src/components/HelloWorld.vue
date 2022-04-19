@@ -1,16 +1,17 @@
 <template>
   <div class="hello">
     <h1>{{msg}}</h1>
-    <div class="li" v-for="item in lists" :key="item.id">{{item.name}}</div>
+    <div class="li" v-for="item in lists" :key="item.id" @click="liClick(item)">{{item.name}}</div>
     <p>{{cartNum}}</p>
-    <button @click="addFn">add</button>
+    <button id="addBtn" @click="addFn">add</button>
     <strong @click="fetchData">fetch data</strong>
     <a id="goPage" href="javascript:;" @click="goPage">go about</a>
+    <button id="getBtn" @click="getBtn">get btn</button>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
   name: 'HelloWorld',
   props: ['msg'],
@@ -30,10 +31,14 @@ export default {
     })
   },
   methods: {
+    ...mapMutations(['setCurList']),
     ...mapActions(['fetchList']),
     async fetchData(){
       const result = await this.fetchList()
       this.storeList = result.data
+    },
+    liClick(item){
+      this.setCurList(item)
     },
     addFn(){
       // console.log(this.getLoginStatus)
@@ -51,6 +56,11 @@ export default {
         })
       }
       
+    },
+    getBtn(){
+      if(localStorage.getItem('cartNum')){
+        this.cartNum += 1
+      }
     },
     goPage(){
       this.$router.push({

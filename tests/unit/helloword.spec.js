@@ -37,9 +37,13 @@ config.mocks = {
 
 
 describe('HelloWorld.vue', () => {
-  let store;
+  let store,mutations;
+  mutations = {
+    setCurList: jest.fn()
+  }
   beforeEach(() => {
     store = new Vuex.Store({
+      mutations,
       actions: {
         fetchList: jest.fn(() => Promise.resolve(mockData['/store/list']))
       },
@@ -61,7 +65,7 @@ describe('HelloWorld.vue', () => {
 
   it('add btn', async()=>{
     const wrapper = shallowMount(HelloWorld)
-    wrapper.find('button').trigger('click')
+    wrapper.find('#addBtn').trigger('click')
     await flushPromises()
     
     expect(wrapper.vm.cartNum).toBe(1)
@@ -72,7 +76,16 @@ describe('HelloWorld.vue', () => {
     expect(wrapper.emitted().add).toBeTruthy()
     expect(wrapper.emitted().add.length).toBe(1)
     expect(wrapper.emitted().add[0]).toEqual([1])
+  })
 
+  it('get btn', async()=>{
+    const wrapper = shallowMount(HelloWorld)
+    wrapper.find('#getBtn').trigger('click')
+    await flushPromises()
+    const spy = jest.spyOn(localStorage, 'getItem')
+    console.log('spy==>',spy)
+    expect(spy).toHaveBeenCalledWith('cartNum')
+    expect(wrapper.vm.cartNum).toBe(1)
   })
 
   it('go page', async()=>{
@@ -96,5 +109,24 @@ describe('HelloWorld.vue', () => {
     await flushPromises()
     expect(wrapper.vm.storeList.length).toBe(2)
   })
+
+  it('action fetchtest', async()=>{
+    const wrapper = shallowMount(HelloWorld, { store, localVue })
+    wrapper.find('strong').trigger('click')
+    await flushPromises()
+    expect(wrapper.vm.storeList.length).toBe(2)
+  })
+
+  it('li click mutation', async()=>{
+    const wrapper = shallowMount(HelloWorld, { store, localVue })
+    await flushPromises()
+    wrapper.find('.li').trigger('click')
+    await flushPromises()
+    expect(mutations.setCurList).toBeCalledWith({},{
+      name: 'aaa',
+      id: 1
+    })
+  })
+
 
 })

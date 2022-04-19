@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isLogin: true,
-    lists: []
+    lists: [],
+    curList: null,
   },
   getters: {
     getLoginStatus(state){
@@ -20,6 +21,9 @@ export default new Vuex.Store({
     },
     setList(state, lists){
       state.lists = lists
+    },
+    setCurList(state, item){
+      state.curList = item
     }
   },
   actions: {
@@ -27,7 +31,12 @@ export default new Vuex.Store({
       let result = await axios.post('/store/list',playload)
       commit('setList',result.data)
       return result;
-    }
+    },
+    // async fetchCurList({commit}, playload){
+    //   let result = await axios.post('/store/curlist',playload)
+    //   commit('setCurList',playload)
+    //   return result;
+    // }
   },
   modules: {
   }
